@@ -10,6 +10,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -42,19 +43,36 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-    public function login(Request $request){
+
+    public function apiLogin(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response([
+                'message' => 'These credentials do not match our records'
+            ], 200);
+        }
+
+        $tokenObject = $user->createToken('access-token');
+        $response = [
+            'userData' => $user,
+            'accessToken' => $tokenObject->accessToken,
+            'tokenExpiry' => $tokenObject->token->expires_at
+        ];
+        return \response()->json($response);
+    }
+    public function login(Request $request)
+    {
         $credentials = $request->only('email', 'password');
         $authSuccess = \Illuminate\Support\Facades\Auth::attempt($credentials, $request->has('remember'));
         if($authSuccess) {
             $request->session()->regenerate();
-  
+            return view('homePage');
         }else{
-            return
-            response()->json([
-                    'success' => false,
-                    'message' => 'Login failed. Incorrect credentials'
-                ], Response::HTTP_FORBIDDEN);
+            return back()->withErrors([
+                'success' => false,
+                'message' => 'Login failed. Incorrect credentials'
+            ]);
         }
-
     }
 }

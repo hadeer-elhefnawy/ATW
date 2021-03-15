@@ -17,13 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/homepage', function () {
-    return view('homepage');
-})->name('homepage');
+Route::get('/homepage', [\App\Http\Controllers\HomeController::class,'index'])->name('homepage');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/admin', 'HomeController@adminIndex')->name('adminHome')->middleware('admin');
 
 Route::resource('/posts','PostController');
 Route::resource('/comments','CommentController');

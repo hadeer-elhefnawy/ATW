@@ -2,14 +2,6 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Edit posts</h2>
-            </div>
-        
-        </div>
-    </div>
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -22,28 +14,20 @@
         </div>
     @endif
 
-    <form action="{{ route('posts.update',$post->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>title:</strong>
-                    <input type="text" name="title" value="{{ $post->title }}" class="form-control" placeholder="post title">
-                </div>
-                <div class="form-group">
-                    <strong>body:</strong>
-                    <textarea class="form-control" name="body" rows="3"> <?php echo $post->body; ?></textarea>
-                </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{$post->title}}</h5>
+                <p class="card-text">{{$post->body}}</p>
+                <a class="float-right">{{count($post->comments)}} Comments</a>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 text-right">
-                <a class="btn btn-primary" href="{{ route('posts.index') }}"> Back</a>
+            <div class="card-footer text-muted">
+                <ul class="list-unstyled">
+                    @foreach($post->comments as $comment)
+                        <li><a class="text-danger">{{$comment->user->name}}</a>: {{$comment->body}}</li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
-    </form>
 @endsection
