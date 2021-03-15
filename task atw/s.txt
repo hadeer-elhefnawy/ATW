@@ -1,0 +1,16 @@
+posts   has many comments , has many user                    one to many 
+comments  belongs to one post , belong belong to one user
+user  has many comments has many posts
+
+
+1 user has many post and many comment ----> one to many  hasmanypost ,, hasmanycomment
+
+2- post     user id            has many comment ,, belongs to user
+
+3- comment    post id - user id    ,, belongs to user ,, belongs to post 
+
+
+
+show tmam 
+create tmam
+edit tmam
